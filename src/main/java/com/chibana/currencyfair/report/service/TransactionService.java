@@ -1,7 +1,9 @@
 package com.chibana.currencyfair.report.service;
 
 import com.chibana.currencyfair.report.dto.TransactionDateResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.Date;
 
@@ -11,6 +13,6 @@ import java.util.Date;
  **/
 public interface TransactionService {
 
-    Page<TransactionDateResponse> getTransactionsByDate(Date initDate, Date endDate);
+    Page<TransactionDateResponse> getTransactionsByDate(Date initDate, Date endDate, PageRequest pageRequest) throws JsonProcessingException;
 
 }

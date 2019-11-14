@@ -4,3 +4,14 @@ server:
 spring:
   profiles:
     active: dev
+feign:
+  client:
+    config:
+      default:
+        connectionTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+
+api:
+  transaction:
+    url: http://localhost:8080
