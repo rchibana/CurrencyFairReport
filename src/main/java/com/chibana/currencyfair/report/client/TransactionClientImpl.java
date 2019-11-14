@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,8 @@ public class TransactionClientImpl implements TransactionClient {
     }
 
     @Override
-    public TransactionPage<TransactionDateResponse> getTransactionsByDate(final String initDate, final String endDate, final Integer pageNumber, final Integer pageSize) throws JsonProcessingException {
+    public Page<TransactionDateResponse> getTransactionsByDate(final String initDate, final String endDate,
+                                                               final Integer pageNumber, final Integer pageSize) throws JsonProcessingException {
 
         final URI uri = UriComponentsBuilder.fromUriString(URL + "/transaction/reporter/date")
                 .queryParam(INIT_DATE, initDate)
@@ -56,8 +58,7 @@ public class TransactionClientImpl implements TransactionClient {
         responseEntity = restTemplate.exchange(uri, HttpMethod.GET, null, responseType);
 
         if(responseEntity.getBody() != null && responseEntity.getBody().getTotalElements() > 0){
-            final String responseAsString = String.valueOf(responseEntity.getBody().getContent());
-            return objectMapper.readValue(responseAsString, new TypeReference<TransactionPage<TransactionDateResponse>>() {});
+            return responseEntity.getBody();
         }
 
         return new TransactionPage<>();

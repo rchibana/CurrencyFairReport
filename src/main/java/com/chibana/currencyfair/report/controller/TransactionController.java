@@ -61,6 +61,16 @@ public class TransactionController {
                     .boxed()
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
+
+
+            int startPage = currentPage;
+            int lastPage = currentPage;
+
+            for(; startPage > 1 && startPage > currentPage - 3; startPage--);
+            for(; lastPage < transactionsByDate.getTotalPages() && (lastPage < currentPage + 3); lastPage++);
+
+            model.addAttribute("startPage", startPage);
+            model.addAttribute("lastPage", lastPage);
         }
 
         return "transactions";

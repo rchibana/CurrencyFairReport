@@ -65,7 +65,7 @@
                                 <td th:text="${transaction.amountSell}">1000.00</td>
                                 <td th:text="${transaction.amountBuy}">747.10</td>
                                 <td th:text="${transaction.rate}">0.7471</td>
-                                <td th:text="${transaction.timePlaced}">24/01/2018 10:27:44</td>
+                                <td th:text="${#dates.format(transaction.timePlaced, 'dd-MMM-yyyy HH:mm:ss')}">24/01/2018 10:27:44</td>
                                 <td th:text="${transaction.originatingCountry}">FR</td>
                             </tr>
                             </tbody>
@@ -74,25 +74,24 @@
                 </div>
                 <nav aria-label="Pagination" th:if="${transactionsPage.totalPages > 0}">
                     <ul class="pagination justify-content-center">
-                        <!--                        <li class="page-item" th:classappend="${transactionsPage.number eq 0} ? 'disabled'">-->
-                        <!--                            <a class="page-link"-->
-                        <!--                               th:href="@{/transactions?page={id}(movieId=${movie.id},id=${genres.number lt 2 ? 1 : genres.number})}-->
-                        <!--                               aria-label="Previous">-->
-                        <!--                                <span aria-hidden="true">&laquo;</span>-->
-                        <!--                                <span class="sr-only">Previous</span>-->
-                        <!--                            </a>-->
-                        <!--                        </li>-->
-
-                        <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-                            <a class="page-link" th:href="@{|/transactions/page/${pageNumber}|}" th:text=${pageNumber}>1</a>
+                        <li class="page-item" th:classappend="${transactionsPage.number eq 0} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/transactions(page=${transactionsPage.number})}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                            </a>
                         </li>
 
-                        <!--                        <li class="page-item">-->
-                        <!--                            <a class="page-link" href="#" aria-label="Next">-->
-                        <!--                                <span aria-hidden="true">&raquo;</span>-->
-                        <!--                                <span class="sr-only">Next</span>-->
-                        <!--                            </a>-->
-                        <!--                        </li>-->
+                        <li class="page-item" th:each="pageNumber : ${#numbers.sequence(startPage, lastPage)}">
+                            <a class="page-link" th:href="@{/transactions(page=${pageNumber})}" th:text=${pageNumber}>1</a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${transactionsPage.number < transactionsPage.totalPages} ? 'disabled'">
+                            <a class="page-link" th:href="@{/transactions(page=${transactionsPage.number} + 2)}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </section>
