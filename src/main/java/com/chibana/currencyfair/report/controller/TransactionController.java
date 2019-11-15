@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Created by Rodrigo Chibana
@@ -53,25 +50,6 @@ public class TransactionController {
         final Page<TransactionDateResponse> transactionsByDate = transactionService.getTransactionsByDate(initDate, endDate, pageRequest);
 
         model.addAttribute("transactionsPage", transactionsByDate);
-
-        int totalPages = transactionsByDate.getTotalPages();
-
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-
-
-            int startPage = currentPage;
-            int lastPage = currentPage;
-
-            for(; startPage > 1 && startPage > currentPage - 3; startPage--);
-            for(; lastPage < transactionsByDate.getTotalPages() && (lastPage < currentPage + 3); lastPage++);
-
-            model.addAttribute("startPage", startPage);
-            model.addAttribute("lastPage", lastPage);
-        }
 
         return "transactions";
     }

@@ -24,9 +24,6 @@
                     </h6>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            Transactions graph
-                        </a>
-                        <a class="nav-link" href="#">
                             7 days transactions
                         </a>
                     </li>
@@ -72,26 +69,32 @@
                         </table>
                     </div>
                 </div>
-                <nav aria-label="Pagination" th:if="${transactionsPage.totalPages > 0}">
-                    <ul class="pagination justify-content-center">
+                <nav aria-label="Pagination" th:if="${transactionsPage.totalPages gt 0}">
+                    <ul class="pagination justify-content-center font-weight-medium">
                         <li class="page-item" th:classappend="${transactionsPage.number eq 0} ? 'disabled'">
                             <a class="page-link"
-                               th:href="@{/transactions(page=${transactionsPage.number})}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
+                               th:href="@{/transactions(page=${transactionsPage.number})}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
                             </a>
                         </li>
 
-                        <li class="page-item" th:each="pageNumber : ${#numbers.sequence(startPage, lastPage)}">
-                            <a class="page-link" th:href="@{/transactions(page=${pageNumber})}" th:text=${pageNumber}>1</a>
+                        <li class="page-item" th:classappend="${i eq transactionsPage.number + 1} ? 'active'"
+                            th:each="i : ${#numbers.sequence(
+                                transactionsPage.number > 5 ? transactionsPage.number - 3 : 1,
+                                transactionsPage.totalPages > 5 + transactionsPage.number ? transactionsPage.number + 5 : transactionsPage.totalPages,
+                                1)}">
+                            <a class="page-link" th:href="@{/transactions(page=${i})}" th:text=${i}></a>
                         </li>
 
-                        <li class="page-item" th:classappend="${transactionsPage.number < transactionsPage.totalPages} ? 'disabled'">
+                        <li class="page-item" th:classappend="${transactionsPage.number + 1 eq transactionsPage.totalPages} ? 'disabled'">
                             <a class="page-link" th:href="@{/transactions(page=${transactionsPage.number} + 2)}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Next</span>
                             </a>
                         </li>
+
                     </ul>
                 </nav>
             </section>
