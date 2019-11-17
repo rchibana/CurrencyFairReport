@@ -4,6 +4,7 @@ import com.chibana.currencyfair.report.dto.TransactionDateResponse;
 import com.chibana.currencyfair.report.page.TransactionPage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpMethod;
@@ -37,6 +38,7 @@ public class TransactionClientImpl implements TransactionClient {
     }
 
     @Override
+    @Cacheable("transactionsByDate")
     public Page<TransactionDateResponse> getTransactionsByDate(final String initDate, final String endDate,
                                                                final Integer pageNumber, final Integer pageSize) {
 
@@ -56,7 +58,7 @@ public class TransactionClientImpl implements TransactionClient {
         final ResponseEntity<TransactionPage<TransactionDateResponse>> responseEntity;
         responseEntity = restTemplate.exchange(uri, HttpMethod.GET, null, responseType);
 
-        if(responseEntity != null && responseEntity.getBody() != null && responseEntity.getBody().getTotalElements() > 0) {
+        if(responseEntity.getBody() != null && responseEntity.getBody().getTotalElements() > 0) {
             return responseEntity.getBody();
         }
 

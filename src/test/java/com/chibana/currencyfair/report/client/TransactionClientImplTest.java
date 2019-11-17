@@ -41,18 +41,6 @@ class TransactionClientImplTest {
     }
 
     @Test
-    void getTransactionsByDateReturnsNull() {
-        when(restTemplate.exchange(any(URI.class), any(HttpMethod.class), any(RequestEntity.class),
-                any(ParameterizedTypeReference.class))).thenReturn(null);
-
-        Page<TransactionDateResponse> transactionsByDate = transactionClient.getTransactionsByDate("17/11/2019",
-                "20/11/2019", 0, 10);
-
-        Assertions.assertFalse(transactionsByDate.hasContent());
-
-    }
-
-    @Test
     void getTransactionsByDateReturnsNoContent() {
         when(restTemplate.exchange(any(URI.class), any(HttpMethod.class), any(RequestEntity.class),
                 any(ParameterizedTypeReference.class))).thenReturn(null);
