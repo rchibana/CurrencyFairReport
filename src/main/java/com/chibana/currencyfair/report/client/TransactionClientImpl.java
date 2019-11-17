@@ -2,9 +2,7 @@ package com.chibana.currencyfair.report.client;
 
 import com.chibana.currencyfair.report.dto.TransactionDateResponse;
 import com.chibana.currencyfair.report.page.TransactionPage;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
@@ -21,6 +19,7 @@ import java.net.URI;
  * Date: 13/11/2019
  **/
 @Component
+@Log4j2
 public class TransactionClientImpl implements TransactionClient {
 
     private static final String INIT_DATE = "initDate";
@@ -29,21 +28,21 @@ public class TransactionClientImpl implements TransactionClient {
     private static final String PAGE_SIZE = "pageSize";
 
     private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
 
     @Value("${api.transaction.url}")
-    private String URL;
+    private String urlTransactionApi;
 
-    public TransactionClientImpl(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-        this.restTemplate = new RestTemplate();
+    public TransactionClientImpl(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     @Override
     public Page<TransactionDateResponse> getTransactionsByDate(final String initDate, final String endDate,
-                                                               final Integer pageNumber, final Integer pageSize) throws JsonProcessingException {
+                                                               final Integer pageNumber, final Integer pageSize) {
 
-        final URI uri = UriComponentsBuilder.fromUriString(URL + "/transaction/reporter/date")
+        log.info("initDate={}, endDate={}", initDate, endDate);
+
+        final URI uri = UriComponentsBuilder.fromUriString(urlTransactionApi + "/transaction/reporter/date")
                 .queryParam(INIT_DATE, initDate)
                 .queryParam(END_DATE, endDate)
                 .queryParam(PAGE_NUMBER, String.valueOf(pageNumber))
@@ -60,6 +59,8 @@ public class TransactionClientImpl implements TransactionClient {
         if(responseEntity.getBody() != null && responseEntity.getBody().getTotalElements() > 0){
             return responseEntity.getBody();
         }
+
+        log.info("No body received");
 
         return new TransactionPage<>();
 
