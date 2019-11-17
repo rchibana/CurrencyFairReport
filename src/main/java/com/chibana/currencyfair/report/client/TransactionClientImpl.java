@@ -56,7 +56,7 @@ public class TransactionClientImpl implements TransactionClient {
         final ResponseEntity<TransactionPage<TransactionDateResponse>> responseEntity;
         responseEntity = restTemplate.exchange(uri, HttpMethod.GET, null, responseType);
 
-        if(responseEntity.getBody() != null && responseEntity.getBody().getTotalElements() > 0){
+        if(responseEntity != null && responseEntity.getBody() != null && responseEntity.getBody().getTotalElements() > 0) {
             return responseEntity.getBody();
         }
 
